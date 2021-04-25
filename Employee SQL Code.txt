@@ -1,0 +1,74 @@
+-- getting rid of preexisting tables
+DROP TABLE IF EXISTS departments;
+DROP TABLE IF EXISTS dept_emp;
+DROP TABLE IF EXISTS dept_manager;
+DROP TABLE IF EXISTS employees;
+DROP TABLE IF EXISTS salaries;
+DROP TABLE IF EXISTS titles;
+
+-- making sql locations for csvs and loading them in
+CREATE TABLE "departments" (
+    "dept_no" VARCHAR   NOT NULL,
+    "dept_name" VARCHAR   NOT NULL,
+    CONSTRAINT "primarykey_departments" PRIMARY KEY ("dept_no")
+);
+--checking if data loaded OK
+select * from departments;
+
+CREATE TABLE "dept_emp" (
+    "emp_no" INT   NOT NULL,--on original csv, Employee number will be used for joining/primary keys
+    "dept_no" VARCHAR   NOT NULL--on original csv
+)
+;
+--checking if data loaded OK
+select * from dept_emp;
+
+CREATE TABLE "dept_manager" (
+    "dept_no" VARCHAR   NOT NULL,--on original csv
+	"emp_no" INT   NOT NULL--on original csv, Employee number will be used for joining/primary keys
+)
+;
+--checking if data loaded OK
+select * from dept_manager;
+--COPY PASTE FIRST TWO ROWS FROM CSV SO I CAN SEE WHAT I"M WORKING WITH
+--emp_no	emp_title_id	birth_date	first_name	last_name	sex	hire_date
+--473302	s0001	7/25/1953	Hideyuki	Zallocco	M	4/28/1990
+--int      varchar  date  varchar  varchar  varchar  date
+Create table "employees" (
+	"emp_no" INT   NOT NULL,
+	"emp_title_id" varchar(10)  NOT NULL,
+	"birth_date" date   NOT NULL,
+	"first_name" varchar (50)  NOT NULL,
+	"last_name" varchar (50) NOT NULL,
+	"sex" varchar (2) NOT NULL,
+	"hire_date" date  NOT NULL,
+	CONSTRAINT "Primarykey_employees" PRIMARY KEY("emp_no")
+	);
+--checking if data loaded OK
+select * from employees;
+
+-- title_id	title
+-- s0001	Staff
+Create table "titles" (
+	"emp_title_id" varchar(10)  NOT NULL, --changing heading to emp_title_id to match it to employees table
+	"title" varchar(40)  NOT NULL);
+select * from titles;
+
+-- emp_no	salary
+10001	60117
+Create table "salaries" (
+	"emp_no" INT   NOT NULL, 
+	"salary" INT   NOT NULL);
+select * from salaries;
+--All tables imported succesfully!!!
+
+-- 1.List the following details of each employee: employee number, last name, first name, sex, and salary.
+-- employees table has: employee number, last name, first name, sex,
+--salaries table has: employee number, &  salary
+--make an inner join on employee number, 
+
+SELECT employees.emp_no, employees.last_name, employees.first_name, employees.sex, salaries.salary
+FROM employees
+JOIN salaries
+ON employees.emp_no = salaries.emp_no;
+
